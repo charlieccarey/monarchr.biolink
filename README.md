@@ -2,17 +2,21 @@
 
 API Client for Monarch Initiative linked biological objects.   __Source:__ https://github.com/biolink/biolink-api/
 
-## Status
+## Status: Requests and Response OK, Parsing of Content Fails.
 
 Critical bugs, presumably due to "TODO_OBJECT_MAPPING" in the 
 swagger-codegen for generating r client code. (See versions below.)
 
-Recommend waiting for someone to fix that / those mappings.
+Recommend waiting for someone in the swagger codegen community to fix 
+that / those mappings for R clients.
 
 In the meantime, I show below that on the request and response side, 
-the generated code appears OK. 
+the generated code appears OK. So it may be useful to branch off of 
+this for server request and response.
 
-The problems start to occur when we want to look at processed results.
+The problems start to occur when we want to look at processed results. 
+
+Some of the content is processed into results, but not enough to consider it useful.
 
 ## Overview
 
@@ -35,7 +39,8 @@ Make sure you have a proper CRAN repository from which you can download packages
 ### Prerequisites
 
 Install the `devtools` package with the following command.
-```R
+
+```{R, eval = FALSE}
 if(!require(devtools)) { install.packages("devtools") }
 ```
 
@@ -43,7 +48,7 @@ if(!require(devtools)) { install.packages("devtools") }
 
 Make sure you set the working directory to where the code is located.
 Then execute
-```R
+```{R, eval = FALSE}
 library(devtools)
 install(".")
 ```
@@ -67,7 +72,7 @@ In the client, we instantiate a BioentityAPI object, and call get_disease_gene_a
 
 Note we are using safe encoding of the URL so the ":" in OMIM:605543 is "%3A".
 
-```R
+```{R, eval = FALSE}
 be <- BioentityApi$new()
 be$apiClient$basePath <- "http://localhost:8888/api"
 x <- be$get_disease_gene_associations(id = "OMIM%3A605543")
@@ -75,7 +80,7 @@ x <- be$get_disease_gene_associations(id = "OMIM%3A605543")
 
 Check the content.
 
-```R
+```{R, eval = FALSE}
 x # AssociationResults as R6 class.
 x$content$associations$publications$id
 x$content$toJSON()
@@ -91,7 +96,7 @@ the evidence graph, but it seems empty.
 Check the content from the server, as saved in x$response, 
 see if it is OK and has the full set of details we expected.
 
-```R
+```{R, eval = FALSE}
 httr::content(x$response, "text")
 jsonlite::fromJSON(httr::content(x$response, "text"))
 jsonlite::fromJSON(httr::content(x$response, "text"), simplifyVector = TRUE)
@@ -103,7 +108,7 @@ We conclude, there were issues in processing of that resonse into appropriate fi
 
 Let's try functions and see how much of our expected results we pull out.
 
-```R
+```{R, eval = FALSE}
 # be <- BioentityApi$new("http://localhost:8888/api")
 # OR
 be <- BioentityApi$new()
@@ -115,7 +120,7 @@ z$response$status_code # success
 
 It looked empty. Let's examine the URL, paste it into firefox and see what the results look like there.
 
-```R
+```{R, eval = FALSE}
 z$response$request # http://localhost:8888/api/bioentity/gene/NCBIGene%3A8314/function/
 ```
 
@@ -123,7 +128,7 @@ Firefox showed the fields were empty. But we weren't expecting that to be the ca
 
 Try an alternate ID of the same gene.
 
-```R
+```{R, eval = FALSE}
 z <- be$get_gene_function_associations("HGNC%3A950") # ok
 z$content$toJSON()
 ```
@@ -134,7 +139,7 @@ But the evidence graph and other fields are still empty.
 
 Let's try homologs.
 
-```R
+```{R, eval = FALSE}
 be <- BioentityApi$new()
 be$apiClient$basePath <- "http://localhost:8888/api"
 y <- be$get_gene_homolog_associations("HGNC%3A950")
@@ -168,21 +173,21 @@ cd ./R/
 grep TODO ./*.r
 ```
 
-./AssociationResults.r:      #   facet_pivotObject <- TODO_OBJECT_MAPPING$new()
-./AssociationResults.r:      #   facet_countsObject <- TODO_OBJECT_MAPPING$new()
-./AssociationResults.r:      #TODO_OBJECT_MAPPINGObject <- TODO_OBJECT_MAPPING$new()
-./AssociationResults.r:      #self$`facet_pivot` <- TODO_OBJECT_MAPPINGObject$fromJSON(jsonlite::toJSON(AssociationResultsObject$facet_pivot, auto_unbox = TRUE))
-./AssociationResults.r:      #TODO_OBJECT_MAPPINGObject <- TODO_OBJECT_MAPPING$new()
-./AssociationResults.r:      #self$`facet_counts` <- TODO_OBJECT_MAPPINGObject$fromJSON(jsonlite::toJSON(AssociationResultsObject$facet_counts, auto_unbox = TRUE))
-./BioentitysetApi.r:#' get_entity_set_graph_resource TODO Graph object spanning all entities
-./IdentifiermapperApi.r:#' get_identifier_mapper TODO maps a list of identifiers from a source to a target
-./PubpubsApi.r:#' get_foo TODO Returns list of matches
-./SearchResult.r:        facet_pivotObject <- TODO_OBJECT_MAPPING$new()
-./SearchResult.r:        facet_countsObject <- TODO_OBJECT_MAPPING$new()
-./SearchResult.r:      TODO_OBJECT_MAPPINGObject <- TODO_OBJECT_MAPPING$new()
-./SearchResult.r:      self$`facet_pivot` <- TODO_OBJECT_MAPPINGObject$fromJSON(jsonlite::toJSON(SearchResultObject$facet_pivot, auto_unbox = TRUE))
-./SearchResult.r:      TODO_OBJECT_MAPPINGObject <- TODO_OBJECT_MAPPING$new()
-./SearchResult.r:      self$`facet_counts` <- TODO_OBJECT_MAPPINGObject$fromJSON(jsonlite::toJSON(SearchResultObject$facet_counts, auto_unbox = TRUE))
+  ./AssociationResults.r:      #   facet_pivotObject <- TODO_OBJECT_MAPPING$new()
+  ./AssociationResults.r:      #   facet_countsObject <- TODO_OBJECT_MAPPING$new()
+  ./AssociationResults.r:      #TODO_OBJECT_MAPPINGObject <- TODO_OBJECT_MAPPING$new()
+  ./AssociationResults.r:      #self$`facet_pivot` <- TODO_OBJECT_MAPPINGObject$fromJSON(jsonlite::toJSON(AssociationResultsObject$facet_pivot, auto_unbox = TRUE))
+  ./AssociationResults.r:      #TODO_OBJECT_MAPPINGObject <- TODO_OBJECT_MAPPING$new()
+  ./AssociationResults.r:      #self$`facet_counts` <- TODO_OBJECT_MAPPINGObject$fromJSON(jsonlite::toJSON(AssociationResultsObject$facet_counts, auto_unbox = TRUE))
+  ./BioentitysetApi.r:#' get_entity_set_graph_resource TODO Graph object spanning all entities
+  ./IdentifiermapperApi.r:#' get_identifier_mapper TODO maps a list of identifiers from a source to a target
+  ./PubpubsApi.r:#' get_foo TODO Returns list of matches
+  ./SearchResult.r:        facet_pivotObject <- TODO_OBJECT_MAPPING$new()
+  ./SearchResult.r:        facet_countsObject <- TODO_OBJECT_MAPPING$new()
+  ./SearchResult.r:      TODO_OBJECT_MAPPINGObject <- TODO_OBJECT_MAPPING$new()
+  ./SearchResult.r:      self$`facet_pivot` <- TODO_OBJECT_MAPPINGObject$fromJSON(jsonlite::toJSON(SearchResultObject$facet_pivot, auto_unbox = TRUE))
+  ./SearchResult.r:      TODO_OBJECT_MAPPINGObject <- TODO_OBJECT_MAPPING$new()
+  ./SearchResult.r:      self$`facet_counts` <- TODO_OBJECT_MAPPINGObject$fromJSON(jsonlite::toJSON(SearchResultObject$facet_counts, auto_unbox = TRUE))
 
 Checking swagger-codegen github, the source of these are from Swagger-codegen R client codegenerator.
 
