@@ -1,0 +1,19 @@
+Package: monarchr.biolink
+Title: R Package Client for the Monarch Initiative's BioLink API
+Version: 0.0.0.1
+Authors@R: c(person("Charlie C", "Carey", role=c("cre", "aut"), email = "charlieccarey@gmail.com"),
+             person("Swagger Codegen community", email = "apiteam@swagger.io", role = c("aut")))
+Maintainer: The package maintainer <charlieccarey@gmail.com>
+Description: This is a client for Monarch Initiative's [biolink-api](https://github.com/biolink/biolink-api/).
+Depends: R (>= 3.3.3)
+Encoding: UTF-8
+License: Apache License (>= 2.0)
+LazyData: true
+Suggests: testthat
+Imports: jsonlite, 
+         httr, 
+         R6
+RoxygenNote: 6.0.1.9000
+URL: https://github.com/charlieccarey/monarchr
+BugReports: https://github.com/charlieccarey/monarchr/issues
+
